@@ -2,6 +2,7 @@
 #by Jaden Heller
 
 import maya.cmds as cmds
+import os
  
 class MultiCamManager_Window(object):
     
@@ -10,18 +11,20 @@ class MultiCamManager_Window(object):
         self.window = "MultiCamManager"
         self.title = "Multi-Camera Manager"
         self.size = ( 400, 400)
-        loadCamBtnLabel = "Load All Cameras"
+        dir_path = os.path.dirname(os.path.realpath(__file__))
         #Incase there's an instance of the window already open, close it
         if cmds.window(self.window, exists = True):
             cmds.deleteUI(self.window, window = True)
         #Create a new instance of the window
         self.window = cmds.window(self.window, title = self.title, widthHeight=self.size)
         #Layout for the title and the seperator line
-        cmds.columnLayout(adjustableColumn = True)
+        titleLayout = cmds.columnLayout(adjustableColumn = True)
+        cmds.rowLayout(parent = titleLayout, numberOfColumns = 2, adjustableColumn = 2)
+        cmds.image("Logo", image = dir_path + "\Images\MCamM-Logo_v1.png")
         cmds.text (self.title)
-        cmds.separator(height=20, style = "doubleDash")
+        cmds.separator(height=20, style = "doubleDash", parent = titleLayout)
         #New layout for the Load Camera button (additional spacing between text and the button)
-        cmds.columnLayout(adjustableColumn = True, rowSpacing = 20) 
+        cmds.columnLayout(adjustableColumn = True, rowSpacing = 20, parent = titleLayout)
         cmds.text("Load all cameras in the scene - Double-click to refresh")
         cmds.button(label = "Load All Cameras", command = self.selectCameras)
         #A collapsable menu called "Cameras" incase the user wishes to hide the list of cameras
